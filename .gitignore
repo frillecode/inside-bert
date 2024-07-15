@@ -1,0 +1,11 @@
+.venv/
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+checkpoints
+finetuned-model
+logits
+
+glue_data
+src/.DS_Store

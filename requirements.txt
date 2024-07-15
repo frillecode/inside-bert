@@ -1,0 +1,16 @@
+Cython
+datasets
+numpy
+pandas
+scikit-learn
+ndjson
+transformers
+accelerate == 0.27.2 # hope this works
+torch
+pytorch-lightning
+omegaconf
+wget
+ipykernel
+evaluate
+wasabi
+matplotlib
