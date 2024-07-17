@@ -32,7 +32,7 @@ def subset_to_dataset(subset: dataset.Subset):
 
 # Load and preprocess SST-2 dataset
 def load_and_preprocess_sst2(
-    experiment_info: ExperimentInfo, subset: bool = False, val_split: float = 0.1
+    experiment_info: ExperimentInfo, only_subset: bool = False, val_split: float = 0.1
 ):
     # load the SST-2 dataset
     dataset = load_dataset("glue", "sst2")
@@ -51,8 +51,8 @@ def load_and_preprocess_sst2(
         batched=True,
     )
 
-    # select a small subset of the dataset if subset is True
-    if subset:
+    # select a small subset of the dataset if only_subset is True
+    if only_subset:
         train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(1000))
     else:
         train_dataset = tokenized_datasets["train"]
@@ -72,7 +72,9 @@ def load_and_preprocess_sst2(
 
 
 # Load and preprocess MRPC dataset
-def load_and_preprocess_mrpc(experiment_info: ExperimentInfo, subset: bool = False):
+def load_and_preprocess_mrpc(
+    experiment_info: ExperimentInfo, only_subset: bool = False
+):
     # load the MRPC dataset
     dataset = load_dataset("glue", "mrpc")
 
@@ -91,8 +93,8 @@ def load_and_preprocess_mrpc(experiment_info: ExperimentInfo, subset: bool = Fal
         batched=True,
     )
 
-    if subset:
-        # select a small subset of the dataset
+    # select a small subset of the dataset if only_subset is True
+    if only_subset:
         train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(1000))
         eval_dataset = (
             tokenized_datasets["validation"].shuffle(seed=42).select(range(1000))
@@ -109,7 +111,7 @@ def load_and_preprocess_mrpc(experiment_info: ExperimentInfo, subset: bool = Fal
 
 # Load and preprocess MNLI dataset
 def load_and_preprocess_mnli(
-    experiment_info: ExperimentInfo, subset: bool = False, val_split: float = 0.1
+    experiment_info: ExperimentInfo, only_subset: bool = False, val_split: float = 0.1
 ):
     # load the MNLI dataset
     dataset = load_dataset("glue", "mnli")
@@ -129,8 +131,8 @@ def load_and_preprocess_mnli(
         batched=True,
     )
 
-    # select a small subset of the dataset if subset is True
-    if subset:
+    # select a small subset of the dataset if only_subset is True
+    if only_subset:
         train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(1000))
     else:
         train_dataset = tokenized_datasets["train"]
@@ -150,13 +152,15 @@ def load_and_preprocess_mnli(
 
 
 # Load and preprocess data - general function
-def load_and_preprocess_data(experiment_info: ExperimentInfo, subset: bool = False):
+def load_and_preprocess_data(
+    experiment_info: ExperimentInfo, only_subset: bool = False
+):
     if experiment_info.task == "SST-2":
-        return load_and_preprocess_sst2(experiment_info, subset)
+        return load_and_preprocess_sst2(experiment_info, only_subset)
     elif experiment_info.task == "MRPC":
-        return load_and_preprocess_mrpc(experiment_info, subset)
+        return load_and_preprocess_mrpc(experiment_info, only_subset)
     elif experiment_info.task == "MNLI":
-        return load_and_preprocess_mnli(experiment_info, subset)
+        return load_and_preprocess_mnli(experiment_info, only_subset)
     else:
         raise ValueError("Task not supported.")
 
