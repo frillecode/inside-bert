@@ -187,27 +187,16 @@ class CustomTrainer(Trainer):
         model.train()
         inputs = self._prepare_inputs(inputs)
 
-        if self.args.fp16 and _use_native_amp:
-            with autocast():
-                loss, outputs = self.compute_loss(model, inputs, return_outputs=True)
-        else:
-            loss, outputs = self.compute_loss(model, inputs, return_outputs=True)
-
+        loss, outputs = self.compute_loss(model, inputs, return_outputs=True)
         logits = outputs.logits
+
         if self.args.n_gpu > 1:
             loss = loss.mean()  # mean() to average on multi-gpu parallel training
 
         if self.args.gradient_accumulation_steps > 1:
             loss = loss / self.args.gradient_accumulation_steps
 
-        if self.args.fp16 and _use_native_amp:
-            self.scaler.scale(loss).backward()
-        elif self.args.fp16 and _use_apex:
-            with amp.scale_loss(loss, self.optimizer) as scaled_loss:
-                scaled_loss.backward()
-        else:
-            loss.backward()
-
+        loss.backward()
         # Save the logits
         if logits.dim() == 0:
             logits = logits.unsqueeze(0)
