@@ -9,3 +9,5 @@ logits
 
 glue_data
 src/.DS_Store
+
+__pycache__/

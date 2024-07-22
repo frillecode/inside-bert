@@ -2,19 +2,11 @@ import numpy as np
 from typing import Callable
 from datasets import load_dataset, Dataset
 from transformers import AutoTokenizer, Trainer
-from configs.experiment_setup import ExperimentInfo
+from utils.experiments import Experiment
 import evaluate
 from torch.utils.data import random_split, dataset
 import torch
 
-
-# Load and transform logits
-def load_and_transform_logits(
-    experiment_info: ExperimentInfo, transform_method: Callable
-):
-    """Load logits and transform them using the provided method."""
-
-    pass
 
 
 # Convert a subset to a Dataset object
@@ -32,7 +24,7 @@ def subset_to_dataset(subset: dataset.Subset):
 
 # Load and preprocess SST-2 dataset
 def load_and_preprocess_sst2(
-    experiment_info: ExperimentInfo, only_subset: bool = False, val_split: float = 0.1
+    experiment_info: Experiment, only_subset: bool = False, val_split: float = 0.1
 ):
     # load the SST-2 dataset
     dataset = load_dataset("glue", "sst2")
@@ -72,9 +64,7 @@ def load_and_preprocess_sst2(
 
 
 # Load and preprocess MRPC dataset
-def load_and_preprocess_mrpc(
-    experiment_info: ExperimentInfo, only_subset: bool = False
-):
+def load_and_preprocess_mrpc(experiment_info: Experiment, only_subset: bool = False):
     # load the MRPC dataset
     dataset = load_dataset("glue", "mrpc")
 
@@ -111,7 +101,7 @@ def load_and_preprocess_mrpc(
 
 # Load and preprocess MNLI dataset
 def load_and_preprocess_mnli(
-    experiment_info: ExperimentInfo, only_subset: bool = False, val_split: float = 0.1
+    experiment_info: Experiment, only_subset: bool = False, val_split: float = 0.1
 ):
     # load the MNLI dataset
     dataset = load_dataset("glue", "mnli")
@@ -152,9 +142,7 @@ def load_and_preprocess_mnli(
 
 
 # Load and preprocess data - general function
-def load_and_preprocess_data(
-    experiment_info: ExperimentInfo, only_subset: bool = False
-):
+def load_and_preprocess_data(experiment_info: Experiment, only_subset: bool = False):
     if experiment_info.task == "SST-2":
         return load_and_preprocess_sst2(experiment_info, only_subset)
     elif experiment_info.task == "MRPC":

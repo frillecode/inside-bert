@@ -1,0 +1,15 @@
+model: "distilbert-base-uncased"
+task: "MNLI"
+
+output_dir: "/Users/au617011/Documents/Thesis-results/"
+only_subset: True
+
+training_args:
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  num_train_epochs: 3
+  logging_dir: "logs"
+  logging_steps: 50
+  evaluation_strategy: "steps"
+  save_steps: 50
+  use_cpu: True

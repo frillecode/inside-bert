@@ -1,7 +1,7 @@
 import os
 
 import torch
-from configs.experiment_setup import ExperimentInfo
+from utils.experiments import Experiment
 from utils.utils_finetune import (
     load_and_preprocess_data,
     CustomTrainer,
@@ -13,10 +13,11 @@ from transformers import (
     Trainer,
     TrainerCallback,
 )
+import yaml
 
 
 # Define function to load and preprocess data and model and train the model
-def main(experiment: ExperimentInfo, only_subset: bool = False):
+def main(experiment: Experiment, only_subset: bool = False):
 
     print("[INFO] Setting up experiment...")
 
@@ -42,7 +43,7 @@ def main(experiment: ExperimentInfo, only_subset: bool = False):
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         compute_metrics=compute_metrics,
-        output_dir=experiment.output_dir,
+        output_dir=experiment.current_run_dir,
     )
 
     # Train the model
@@ -59,8 +60,12 @@ def main(experiment: ExperimentInfo, only_subset: bool = False):
 
 
 if __name__ == "__main__":
-    # Define experiment
-    experiment = ExperimentInfo()
+    # Load experiment info from config file
+    with open(os.path.join("src", "configs", "experiment_config.yaml"), "r") as file:
+        experiment_config = yaml.safe_load(file)
+
+    # Initialize the experiment
+    experiment = Experiment(**experiment_config)
 
     # Run the main function
     trained_model = main(experiment, only_subset=experiment.only_subset)
@@ -70,7 +75,3 @@ if __name__ == "__main__":
         trained_model,
         f"{experiment.current_run_dir}/model.pth",
     )
-
-
-# load model.pth
-# model = torch.load(f"{experiment.output_dir}/model.pth")
