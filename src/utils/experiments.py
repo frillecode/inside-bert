@@ -1,4 +1,5 @@
 import os
+import torch
 from transformers import (
     TrainingArguments,
 )
@@ -27,7 +28,9 @@ class Experiment:
 
         # Define training arguments
         self.training_args = TrainingArguments(
-            **training_args, output_dir=self.output_dir
+            **training_args,
+            output_dir=self.output_dir,
+            use_cpu=not torch.cuda.is_available(),
         )
 
         # Ensure that the output directory exists

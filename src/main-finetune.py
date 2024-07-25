@@ -12,6 +12,7 @@ from transformers import (
     AutoModelForSequenceClassification,
     Trainer,
     TrainerCallback,
+    TrainingArguments,
 )
 import yaml
 
@@ -29,7 +30,12 @@ def main(experiment: Experiment, only_subset: bool = False):
 
     # Load pretrained bert model
     print("[INFO] Loading pretrained model...")
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        print("[INFO] Using GPU...")
+        device = torch.device("cuda")
+    else:
+        print("[INFO] Using CPU...")
+        device = torch.device("cpu")
     model = AutoModelForSequenceClassification.from_pretrained(
         experiment.model,
         num_labels=n_labels,
