@@ -61,7 +61,14 @@ def main(experiment: Experiment, only_subset: bool = False):
 
 if __name__ == "__main__":
     # Load experiment info from config file
-    with open(os.path.join("src", "configs", "experiment_config.yaml"), "r") as file:
+    with open(
+        os.path.join(
+            "src",
+            "finetune_configs",
+            "distilbert-base-uncased-MNLI_finetune_config.yaml",
+        ),
+        "r",
+    ) as file:
         experiment_config = yaml.safe_load(file)
 
     # Initialize the experiment
@@ -70,7 +77,7 @@ if __name__ == "__main__":
     # Run the main function
     trained_model = main(experiment, only_subset=experiment.only_subset)
 
-    # Save the model
+    # Save the model (unsure if this is necessary)
     torch.save(
         trained_model,
         f"{experiment.current_run_dir}/model.pth",
