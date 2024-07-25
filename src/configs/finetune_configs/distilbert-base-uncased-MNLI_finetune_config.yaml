@@ -12,4 +12,4 @@ training_args:
   logging_steps: 50
   evaluation_strategy: "steps"
   save_steps: 50
-  use_cpu: True
+  #use_cpu: True

@@ -29,7 +29,7 @@ def main(experiment: Experiment, only_subset: bool = False):
 
     # Load pretrained bert model
     print("[INFO] Loading pretrained model...")
-    device = torch.device("cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = AutoModelForSequenceClassification.from_pretrained(
         experiment.model,
         num_labels=n_labels,
@@ -64,6 +64,7 @@ if __name__ == "__main__":
     with open(
         os.path.join(
             "src",
+            "configs",
             "finetune_configs",
             "distilbert-base-uncased-MNLI_finetune_config.yaml",
         ),
