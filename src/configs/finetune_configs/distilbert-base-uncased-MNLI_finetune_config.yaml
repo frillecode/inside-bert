@@ -1,7 +1,7 @@
 model: "distilbert-base-uncased"
 task: "MNLI"
 
-output_dir: "/Users/au617011/Documents/Thesis-results/"
+output_dir: /work # "/Users/au617011/Documents/Thesis-results/"
 only_subset: True
 
 training_args:
@@ -12,4 +12,3 @@ training_args:
   logging_steps: 50
   evaluation_strategy: "steps"
   save_steps: 50
-  #use_cpu: True
