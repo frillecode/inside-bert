@@ -1,9 +1,9 @@
 model: "distilbert-base-uncased"
 task: "MNLI"
 
-timestamp: "2024-07-17_18-08-57"
+timestamp: "2024-07-26_14-03-57" # run from office, think good
 
-output_dir: /work # "/Users/au617011/Documents/Thesis-results/"
+output_dir: /work/Results # "/Users/au617011/Documents/Thesis-results/"
 
 training_args:
   per_device_train_batch_size: 8
