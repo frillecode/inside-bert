@@ -17,7 +17,8 @@ class Experiment:
         only_subset: bool = False,
         timestamp: Optional[
             str
-        ] = None,  # used to load a specific experiment or create one with a specific timestamp
+        ] = None,  # used to load a specific experiment run with a given timestamp
+        window: Optional[int] = None, # used for calculating NTR
     ):
         self.experiment_name = f"{model}-{task}"
         self.task = task
@@ -25,6 +26,7 @@ class Experiment:
         self.output_dir = output_dir
         self.experiment_dir = os.path.join(self.output_dir, self.experiment_name)
         self.only_subset = only_subset
+        self.window = window
 
         # Define training arguments
         self.training_args = TrainingArguments(

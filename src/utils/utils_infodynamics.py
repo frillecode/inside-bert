@@ -1,5 +1,6 @@
 import os
-
+import time
+from tqdm import tqdm
 import ndjson
 import numpy as np
 from scipy import stats
@@ -60,9 +61,12 @@ class InfoDynamics:
         self.m = self.data.shape[0]
 
     def novelty(self, meas=kld):
+        print("[INFO] Calculating novelty")
+        start_time = time.time()
         N_hat = np.zeros(self.m)
         N_sd = np.zeros(self.m)
-        for i, x in enumerate(self.data):
+        for i, x in enumerate(tqdm(self.data)):
+
             submat = self.data[(i - self.window) : i,]
             tmp = np.zeros(submat.shape[0])
             if submat.any():
@@ -76,11 +80,14 @@ class InfoDynamics:
 
         self.nsignal = N_hat
         self.nsigma = N_sd
+        print(f"[INFO] Calculating novelty took {time.time() - start_time} seconds")
 
     def transience(self, meas=kld):
+        print("[INFO] Calculating transience")
+        start_time = time.time()
         T_hat = np.zeros(self.m)
         T_sd = np.zeros(self.m)
-        for i, x in enumerate(self.data):
+        for i, x in enumerate(tqdm(self.data)):
             submat = self.data[i + 1 : (i + self.window + 1),]
             tmp = np.zeros(submat.shape[0])
             if submat.any():
@@ -95,8 +102,11 @@ class InfoDynamics:
 
         self.tsignal = T_hat
         self.tsigma = T_sd
+        print(f"[INFO] Calculating transience took {time.time() - start_time} seconds")
 
     def resonance(self, meas=kld):
+        print("[INFO] Calculating resonance")
+        start_time = time.time()
         self.novelty(meas)
         self.transience(meas)
         self.rsignal = self.nsignal - self.tsignal
@@ -105,6 +115,7 @@ class InfoDynamics:
         self.rsigma = (self.nsigma + self.tsigma) / 2
         self.rsigma[: self.window] = np.zeros([self.window]) + self.weight
         self.rsigma[-self.window :] = np.zeros([self.window]) + self.weight
+        print(f"[INFO] Calculating resonance took {time.time() - start_time} seconds")
 
 
 # Calculate Novelty, Transience & Resonance
@@ -125,6 +136,9 @@ def calc_ntr(probability_matrix, window, visualize=False):
     entropies.InfoDynamics
         trained instance of infodynamics class
     """
+    print(f"[INFO] Calculating NTR with window size {window}")
+
+    start_time = time.time()
 
     idmdl = InfoDynamics(data=probability_matrix, time=None, window=window, sort=False)
 
@@ -132,7 +146,10 @@ def calc_ntr(probability_matrix, window, visualize=False):
     idmdl.transience(meas=jsd)
     idmdl.resonance(meas=jsd)
 
+    print(f"[INFO] Calculating NTR took {time.time() - start_time} seconds")
+
     if visualize:
+        print("[INFO] Visualizing NTR")
         plt.plot(idmdl.nsignal)
 
     return idmdl
@@ -141,6 +158,7 @@ def calc_ntr(probability_matrix, window, visualize=False):
 # Remove first & last {window} documents
 def curb_incomplete_signal(timeseries, window):
     """remove first & last {window} documents"""
+    print(f"[INFO] Curbing incomplete signal (removing first and last {window} documents)")
     return timeseries[window:-window]
 
 
@@ -161,7 +179,9 @@ def calculate_resonance_novelty_slope(resonance, novelty):
     float
         slope of lm(resonance ~ novelty)
     """
+    print("[INFO] Calculating slope of resonance ~ novelty linear model")
 
+    start_time = time.time()
     # reshape
     novelty = novelty.reshape(-1, 1)
     resonance = resonance.reshape(-1, 1)
@@ -182,19 +202,21 @@ def calculate_resonance_novelty_slope(resonance, novelty):
     r2 = r2_score(z_resonance, resonance_pred)
     # p-value
 
+    print(f"[INFO] Calculating slope took {time.time() - start_time} seconds")
+
     return slope, r2
 
 
-# Reshape logits
-def reshape_logits(logits):
-    """Takes a np.array of shape (n_steps, batch_size, n_labels) and reshapes it to (n_documents, n_labels)
+# # Reshape logits
+# def reshape_logits(logits):
+#     """Takes a np.array of shape (n_steps, batch_size, n_labels) and reshapes it to (n_documents, n_labels)
 
-    Parameters:
-        logits (np.array): array of shape (n_steps, batch_size, n_labels)
-    Returns:
-        (np.array): array of shape (n_documents, n_labels)
-    """
-    return logits.reshape(-1, logits.shape[-1])
+#     Parameters:
+#         logits (np.array): array of shape (n_steps, batch_size, n_labels)
+#     Returns:
+#         (np.array): array of shape (n_documents, n_labels)
+#     """
+#     return logits.reshape(-1, logits.shape[-1])
 
 
 # load all logits from a directory
@@ -206,9 +228,21 @@ def load_and_reshape_logits_from_dir(path):
     Returns:
         (np.array): array of shape (n_documents, n_labels)
     """
+    print(f"[INFO] Loading and reshaping logits from {path}")
+    start_time = time.time()
     logits = []
     for file in os.listdir(path):
         if file.endswith(".npy"):
             logits.append(np.load(os.path.join(path, file)))
 
-    return reshape_logits(np.array(logits))
+    print(f"[INFO] Loading and reshaping took {time.time() - start_time} seconds")
+    return np.concatenate(logits)
+
+
+# def check_shape_logits(logits):
+#     for i, inner_list in enumerate(logits):
+#         if len(inner_list) != 32:
+#             print(f"List at index {i} does not have length 32")
+#         for j, element in enumerate(inner_list):
+#             if not isinstance(element, np.ndarray):
+#                 print(f"Element at index {j} in list {i} is not a numpy array")

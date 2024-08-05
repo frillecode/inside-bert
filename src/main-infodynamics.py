@@ -12,7 +12,7 @@ from utils.utils_infodynamics import (
 
 # import os
 
-import ndjson
+import json
 
 # import numpy as np
 # from wasabi import msg
@@ -29,6 +29,70 @@ import ndjson
 #################################
 
 
+
+
+
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+with open(f"{experiment.current_run_dir}/novelty.json", "w") as fout:
+    json.dump(novelty.tolist(), fout)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def main(experiment: Experiment):
 
     # Load logits from the directory
@@ -40,8 +104,8 @@ def main(experiment: Experiment):
     logits = np.exp(logits) / np.exp(logits).sum(axis=-1, keepdims=True)
 
     # Calculate NTR
-    window = 10
-    model = calc_ntr(logits, window=window, visualize=True)
+    window = experiment.window
+    model = calc_ntr(logits, window=window) # visualize=True
 
     novelty = curb_incomplete_signal(model.nsignal, window=window)
     transience = curb_incomplete_signal(model.tsignal, window=window)
@@ -50,20 +114,21 @@ def main(experiment: Experiment):
     slope = calculate_resonance_novelty_slope(resonance, novelty)
 
     results = {
-        "rn_slope": slope,
+        "rn_slope": float(slope),
         "novelty": novelty.tolist(),
         "transience": transience.tolist(),
         "resonance": resonance.tolist(),
     }
 
-    with open(f"{experiment.current_run_dir}/NTR_results.ndjson", "w") as fout:
-        ndjson.dump(results, fout)
+    with open(f"{experiment.current_run_dir}/NTR_results.json", "w") as fout:
+        json.dump(results, fout)
 
 
 if __name__ == "__main__":
     # Load experiment info from config file
     with open(
-        os.path.join(  # "src",
+        os.path.join(
+            "src",
             "configs",
             "infodynamics_configs",  # Important that this is infodynamics_configs
             "distilbert-base-uncased-MNLI-infodynamcis_config.yaml",  # Has to contain a timestamp!
