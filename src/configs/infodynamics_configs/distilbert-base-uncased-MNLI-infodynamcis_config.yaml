@@ -1,9 +1,12 @@
 model: "distilbert-base-uncased"
 task: "MNLI"
 
-timestamp: #"2024-07-26_14-03-57" # run from office, think good
+timestamp: "2024-07-31_12-23-26"
 
-output_dir:  /home/ucloud/masters-thesis-new/Results # "/Users/au617011/Documents/Thesis-results/"
+output_dir: "/Volumes/Expansion/"
+
+window: 100
+step_cutoff: 5000
 
 training_args:
   per_device_train_batch_size: 8
@@ -12,4 +15,4 @@ training_args:
   logging_dir: "logs"
   logging_steps: 50
   evaluation_strategy: "steps"
-  save_steps: 100
+  save_steps: 5000

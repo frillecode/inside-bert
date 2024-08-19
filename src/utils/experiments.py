@@ -19,6 +19,7 @@ class Experiment:
             str
         ] = None,  # used to load a specific experiment run with a given timestamp
         window: Optional[int] = None, # used for calculating NTR
+        step_cutoff: Optional[int] = None, # used for plotting loss
     ):
         self.experiment_name = f"{model}-{task}"
         self.task = task
@@ -27,6 +28,7 @@ class Experiment:
         self.experiment_dir = os.path.join(self.output_dir, self.experiment_name)
         self.only_subset = only_subset
         self.window = window
+        self.step_cutoff = step_cutoff
 
         # Define training arguments
         self.training_args = TrainingArguments(

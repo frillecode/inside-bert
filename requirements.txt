@@ -5,7 +5,7 @@ pandas
 scikit-learn
 ndjson
 transformers == 4.42.4
-accelerate == 0.27.2 # hope this works
+accelerate == 0.27.2
 torch
 pytorch-lightning
 omegaconf

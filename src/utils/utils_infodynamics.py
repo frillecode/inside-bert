@@ -107,8 +107,10 @@ class InfoDynamics:
     def resonance(self, meas=kld):
         print("[INFO] Calculating resonance")
         start_time = time.time()
-        self.novelty(meas)
-        self.transience(meas)
+        if not hasattr(self, "nsignal"):
+            self.novelty(meas)
+        if not hasattr(self, "tsignal"):
+            self.transience(meas)
         self.rsignal = self.nsignal - self.tsignal
         self.rsignal[: self.window] = np.zeros([self.window]) + self.weight
         self.rsignal[-self.window :] = np.zeros([self.window]) + self.weight
@@ -220,7 +222,7 @@ def calculate_resonance_novelty_slope(resonance, novelty):
 
 
 # load all logits from a directory
-def load_and_reshape_logits_from_dir(path):
+def load_and_reshape_logits_from_dir(path, step_cutoff=None):
     """Load all logits from a directory, and reshape them to (n_documents, n_labels)
 
     Parameters:
@@ -233,8 +235,15 @@ def load_and_reshape_logits_from_dir(path):
     logits = []
     for file in os.listdir(path):
         if file.endswith(".npy"):
-            logits.append(np.load(os.path.join(path, file)))
+            # only add logits from steps below step_cutoff
+            if step_cutoff is not None:
+                step = int(file.split("_")[2].split('.')[0])
+                if step <= step_cutoff:
+                    logits.append(np.load(os.path.join(path, file)))
+            else:
+                logits.append(np.load(os.path.join(path, file)))
 
+    print(f"[INFO] Loaded {len(logits)} files")
     print(f"[INFO] Loading and reshaping took {time.time() - start_time} seconds")
     return np.concatenate(logits)
 
@@ -245,4 +254,4 @@ def load_and_reshape_logits_from_dir(path):
 #             print(f"List at index {i} does not have length 32")
 #         for j, element in enumerate(inner_list):
 #             if not isinstance(element, np.ndarray):
-#                 print(f"Element at index {j} in list {i} is not a numpy array")
+#                 print(f"Element at index {j} in list {i} is not a numpy array")s

@@ -1,6 +1,5 @@
 import numpy as np
 import os
-
 import yaml
 from utils.experiments import Experiment
 from utils.utils_infodynamics import (
@@ -9,95 +8,15 @@ from utils.utils_infodynamics import (
     curb_incomplete_signal,
     load_and_reshape_logits_from_dir,
 )
-
-# import os
-
 import json
 
-# import numpy as np
-# from wasabi import msg
-# from tqdm import tqdm
-# import matplotlib.pyplot as plt
-# from sklearn.linear_model import LinearRegression
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.metrics import r2_score
 
-# from utils.infodynamics import InfoDynamics
-# from utils.metrics import jsd
-
-
-#################################
-
-
-
-
-
-
-
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-with open(f"{experiment.current_run_dir}/novelty.json", "w") as fout:
-    json.dump(novelty.tolist(), fout)
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def main(experiment: Experiment):
+def main(experiment: Experiment): 
 
     # Load logits from the directory
     logits = load_and_reshape_logits_from_dir(
-        os.path.join(experiment.current_run_dir, "logits")
+        path = os.path.join(experiment.current_run_dir, "logits"),
+        step_cutoff=experiment.step_cutoff
     )
 
     # Apply softmax to logits
@@ -120,7 +39,7 @@ def main(experiment: Experiment):
         "resonance": resonance.tolist(),
     }
 
-    with open(f"{experiment.current_run_dir}/NTR_results.json", "w") as fout:
+    with open(f"{experiment.current_run_dir}/NTR-results_window-{experiment.window}_step_cutoff-{experiment.step_cutoff}.json", "w") as fout:
         json.dump(results, fout)
 
 
@@ -128,7 +47,7 @@ if __name__ == "__main__":
     # Load experiment info from config file
     with open(
         os.path.join(
-            "src",
+            #"src",
             "configs",
             "infodynamics_configs",  # Important that this is infodynamics_configs
             "distilbert-base-uncased-MNLI-infodynamcis_config.yaml",  # Has to contain a timestamp!
