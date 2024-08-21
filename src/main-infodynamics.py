@@ -33,10 +33,7 @@ def main(experiment: Experiment):
     transience = curb_incomplete_signal(model.tsignal, window=window)
     resonance = curb_incomplete_signal(model.rsignal, window=window)
 
-    slope = calculate_resonance_novelty_slope(resonance, novelty)
-
     results = {
-        "rn_slope": float(slope),
         "novelty": novelty.tolist(),
         "transience": transience.tolist(),
         "resonance": resonance.tolist(),
