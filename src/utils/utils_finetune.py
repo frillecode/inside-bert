@@ -124,16 +124,20 @@ def load_and_preprocess_mnli(
     # select a small subset of the dataset if only_subset is True
     if only_subset:
         train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(1000))
+        eval_dataset = (
+            tokenized_datasets["validation_matched"].shuffle(seed=42).select(range(1000))
+        )
     else:
         train_dataset = tokenized_datasets["train"]
+        eval_dataset = tokenized_datasets["validation_matched"]
+        
+    # # Split the train dataset into train and validation
+    # train_size = int((1.0 - val_split) * len(train_dataset))
+    # val_size = len(train_dataset) - train_size
+    # train_dataset, eval_dataset = random_split(train_dataset, [train_size, val_size])
 
-    # Split the train dataset into train and validation
-    train_size = int((1.0 - val_split) * len(train_dataset))
-    val_size = len(train_dataset) - train_size
-    train_dataset, eval_dataset = random_split(train_dataset, [train_size, val_size])
-
-    train_dataset = subset_to_dataset(train_dataset)
-    eval_dataset = subset_to_dataset(eval_dataset)
+    # train_dataset = subset_to_dataset(train_dataset)
+    # eval_dataset = subset_to_dataset(eval_dataset)
 
     # check number of labels
     n_labels = len(set(train_dataset["label"]))
