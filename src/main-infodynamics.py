@@ -27,6 +27,9 @@ def main(experiment: Experiment):
     model = calc_ntr(logits, window=window) # visualize=True
 
     novelty = curb_incomplete_signal(model.nsignal, window=window)
+    novelty_dict = {"novelty": novelty.tolist()}
+    with open(f"{experiment.current_run_dir}/novelty-results_window-{experiment.window}_step_cutoff-{experiment.step_cutoff}.json", "w") as fout:
+        json.dump(novelty_dict, fout)
     transience = curb_incomplete_signal(model.tsignal, window=window)
     resonance = curb_incomplete_signal(model.rsignal, window=window)
 
@@ -47,10 +50,10 @@ if __name__ == "__main__":
     # Load experiment info from config file
     with open(
         os.path.join(
-            #"src",
+            "src",
             "configs",
             "infodynamics_configs",  # Important that this is infodynamics_configs
-            "distilbert-base-uncased-MNLI-infodynamcis_config.yaml",  # Has to contain a timestamp!
+            "distilbert-base-uncased-MNLI_infodynamics_config.yaml",  # Has to contain a timestamp!
         ),
         "r",
     ) as file:

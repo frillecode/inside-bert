@@ -72,7 +72,7 @@ if __name__ == "__main__":
             "src",
             "configs",
             "finetune_configs",
-            "bert-base-uncased-MNLI_finetune_config.yaml",
+            "distilbert-base-uncased-MNLI_finetune_config.yaml",
         ),
         "r",
     ) as file:

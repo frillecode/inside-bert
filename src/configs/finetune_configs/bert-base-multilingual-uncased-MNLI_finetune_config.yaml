@@ -1,7 +1,7 @@
-model: "distilbert-base-uncased"
+model: "bert-base-multilingual-uncased"
 task: "MNLI"
 
-output_dir: "/work/Results" #/home/ucloud/masters-thesis-new/Results
+output_dir: /work/Results #"/Users/au617011/Documents/Thesis-results/"
 only_subset: False
 
 training_args:

@@ -1,7 +1,7 @@
 model: "bert-base-uncased"
 task: "MNLI"
 
-output_dir: /home/ucloud/masters-thesis-new/Results #"/Users/au617011/Documents/Thesis-results/"
+output_dir: /work/Results #"/Users/au617011/Documents/Thesis-results/"
 only_subset: False
 
 training_args:
@@ -11,4 +11,4 @@ training_args:
   logging_dir: "logs"
   logging_steps: 100
   evaluation_strategy: "steps"
-  save_steps: 5000
+  save_steps: 1000
