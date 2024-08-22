@@ -1,7 +1,7 @@
-model: "distilbert-base-uncased"
+model: "bert-base-multilingual-uncased"
 task: "MNLI"
 
-timestamp: "2024-08-21_14-36-01"
+timestamp: "2024-08-21_17-03-43"
 
 output_dir: "/Volumes/Expansion/" # /work/Results
 

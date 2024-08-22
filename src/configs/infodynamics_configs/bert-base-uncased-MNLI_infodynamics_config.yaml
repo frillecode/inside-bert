@@ -1,9 +1,9 @@
-model: "distilbert-base-uncased"
+model: "bert-base-uncased"
 task: "MNLI"
 
-timestamp: "2024-08-21_14-36-01"
+timestamp: "2024-08-21_15-39-45"
 
-output_dir: "/Volumes/Expansion/" # /work/Results
+output_dir: "/Volumes/Expansion/" #/work/Results
 
 window: 80
 step_cutoff: 5000
