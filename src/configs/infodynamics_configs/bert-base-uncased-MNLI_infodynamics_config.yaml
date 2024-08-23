@@ -1,8 +1,12 @@
-model: "bert-base-multilingual-uncased"
+model: "bert-base-uncased"
 task: "MNLI"
 
+timestamp: "2024-08-21_15-39-45"
+
 output_dir: "/Volumes/Expansion" #/work/Results
-only_subset: False
+
+window: 160 # referring to n_docs, not n_steps!!!
+step_cutoff: 5000
 
 training_args:
   per_device_train_batch_size: 8

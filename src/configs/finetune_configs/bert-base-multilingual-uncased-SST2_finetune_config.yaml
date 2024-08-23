@@ -1,5 +1,5 @@
 model: "bert-base-multilingual-uncased"
-task: "MNLI"
+task: "SST-2"
 
 output_dir: "/Volumes/Expansion" #/work/Results
 only_subset: False

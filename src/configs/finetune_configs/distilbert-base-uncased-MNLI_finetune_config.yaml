@@ -1,7 +1,7 @@
 model: "distilbert-base-uncased"
 task: "MNLI"
 
-output_dir: "/work/Results" #/home/ucloud/masters-thesis-new/Results
+output_dir: "/Volumes/Expansion" #/work/Results
 only_subset: False
 
 training_args:

@@ -1,11 +1,11 @@
 model: "distilbert-base-uncased"
 task: "MNLI"
 
-timestamp: "2024-08-20_00-26-53"
+timestamp: "2024-08-21_14-36-01"
 
-output_dir: /work/Results #"/Volumes/Expansion/"
+output_dir: "/Volumes/Expansion" #/work/Results
 
-window: 100
+window: 160 # referring to n_docs, not n_steps!!!
 step_cutoff: 5000
 
 training_args:
