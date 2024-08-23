@@ -1,7 +1,7 @@
 model: "bert-base-multilingual-uncased"
 task: "MNLI"
 
-output_dir: /work/Results #"/Users/au617011/Documents/Thesis-results/"
+output_dir: "/Volumes/Expansion" #/work/Results
 only_subset: False
 
 training_args:

@@ -1,14 +1,18 @@
-model: "distilbert-base-uncased"
-task: "MRPC"
+model: "bert-base-multilingual-uncased"
+task: "SST-2"
+
+timestamp: XXX
 
 output_dir: "/Volumes/Expansion" #/work/Results
-only_subset: False
+
+window: XX # referring to n_docs, not n_steps!!!
+step_cutoff: XX
 
 training_args:
   per_device_train_batch_size: 8
   per_device_eval_batch_size: 8
   num_train_epochs: 3
   logging_dir: "logs"
-  logging_steps: 10
+  logging_steps: 100
   evaluation_strategy: "steps"
-  save_steps: 10
+  save_steps: 1000

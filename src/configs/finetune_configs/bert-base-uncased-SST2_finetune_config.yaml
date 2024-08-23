@@ -1,7 +1,7 @@
-model: "distilbert-base-uncased"
+model: "bert-base-uncased"
 task: "SST-2"
 
-output_dir: "/Volumes/Expansion" # "/work/Results" #/home/ucloud/masters-thesis-new/Results
+output_dir: "/Volumes/Expansion" #/work/Results
 only_subset: False
 
 training_args:
@@ -11,4 +11,4 @@ training_args:
   logging_dir: "logs"
   logging_steps: 100
   evaluation_strategy: "steps"
-  save_steps: 100
+  save_steps: 1000

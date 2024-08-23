@@ -1,4 +1,4 @@
-model: "distilbert-base-uncased"
+model: "bert-base-uncased"
 task: "MRPC"
 
 output_dir: "/Volumes/Expansion" #/work/Results
