@@ -18,13 +18,11 @@ with open(
 experiment = Experiment(**experiment_config)
 
 # Load model checkpoint 
-# load checkpoint
 model_checkpoint = os.path.join(experiment.current_run_dir, "checkpoints", "checkpoint-5000", "trainer_state.json")
 
 # Load trainer_state file
 with open(model_checkpoint, "r") as file:
     res = json.load(file)
-
 
 # Create log_history
 merged_log_history = []
@@ -36,14 +34,13 @@ for i in range(0, len(res["log_history"]), 2):
 with open(os.path.join(experiment.current_run_dir, "log_history.json"), "w") as file:
     json.dump(merged_log_history, file)
 
-
 # Plot log_history
 plt.plot([x["step"] for x in merged_log_history], [x["eval_loss"] for x in merged_log_history], label="eval_loss")
 plt.plot([x["step"] for x in merged_log_history], [x["loss"] for x in merged_log_history], label="loss")
 plt.plot([x["step"] for x in merged_log_history], [x["eval_accuracy"] for x in merged_log_history], label="eval_accuracy")
 plt.legend()
 plt.xlabel("Step")
-plt.savefig(os.path.join(experiment.current_run_dir, "loss_plot.png"))
+#plt.savefig(os.path.join(experiment.current_run_dir, "loss_plot.png"))
 plt.show()
 
 
@@ -58,3 +55,8 @@ plt.xlabel("Step")
 plt.show() 
 
 
+
+
+
+
+################
