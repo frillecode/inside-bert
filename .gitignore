@@ -11,3 +11,5 @@ glue_data
 src/.DS_Store
 
 __pycache__/
+
+.DS_Store
