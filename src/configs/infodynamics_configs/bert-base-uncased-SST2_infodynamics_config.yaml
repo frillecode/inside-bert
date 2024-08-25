@@ -1,17 +1,17 @@
 model: "bert-base-uncased"
 task: "SST-2"
 
-timestamp: XXX
+timestamp: "2024-08-25_14-29-55"
 
-output_dir: "/Volumes/Expansion" #/work/Results
+output_dir: "/Volumes/Expansion/"
 
-window: XX # referring to n_docs, not n_steps!!!
-step_cutoff: XX
+window: 160 # referring to n_docs, not n_steps!!!
+step_cutoff: 5000
 
 training_args:
   per_device_train_batch_size: 8
   per_device_eval_batch_size: 8
-  num_train_epochs: 3
+  num_train_epochs: 5
   logging_dir: "logs"
   logging_steps: 100
   evaluation_strategy: "steps"
