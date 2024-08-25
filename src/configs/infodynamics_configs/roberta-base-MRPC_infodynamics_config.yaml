@@ -1,18 +1,18 @@
 model: "roberta-base"
 task: "MRPC"
 
-timestamp: "2024-08-23_14-39-18"
+timestamp: "2024-08-25_16-00-08"
 
-output_dir: "/Volumes/Expansion" #/work/Results
+output_dir: "/Volumes/Expansion/" 
 
-window: XX # referring to n_docs, not n_steps!!!
-step_cutoff: XX
+window: 160 # referring to n_docs, not n_steps!!!
+step_cutoff: 5000
 
 training_args:
   per_device_train_batch_size: 8
   per_device_eval_batch_size: 8
-  num_train_epochs: 3
+  num_train_epochs: 87
   logging_dir: "logs"
-  logging_steps: 10
+  logging_steps: 100
   evaluation_strategy: "steps"
-  save_steps: 10
+  save_steps: 1000
