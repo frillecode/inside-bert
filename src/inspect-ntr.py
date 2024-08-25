@@ -116,20 +116,22 @@ def gaussian_kernel(arr, sigma=False, fwhm=False):
     
     return smoothed_vals
 
-def plot_signal(signal, smoothed_vals_adaptive, smoothed_vals_avg, outpath: str):
+def plot_signal(signal, smoothed_vals_adaptive, smoothed_vals_avg, outpath: str, title: str):
     
     fig = plt.figure(figsize= (12,6))
+    # add title to whole figure
+    plt.title(title)
     ax1 = fig.add_subplot(221)
-    ax1.set_title("novelty")   
+    ax1.set_title("novelty", fontsize=10)   
     ax1.plot(signal, markersize=8, alpha=0.6)
     ax2 = fig.add_subplot(222)
-    ax2.set_title("smoothed (adaptive filter)")
+    ax2.set_title("smoothed (adaptive filter)", fontsize=10)
     ax2.plot(smoothed_vals_adaptive, markersize=8, alpha=0.4)
     ax3 = fig.add_subplot(223)
-    ax3.set_title("zero-centered")
+    ax3.set_title("zero-centered", fontsize=10)
     ax3.bar(range(len(signal)), signal-np.mean(signal))
     ax4 = fig.add_subplot(224)
-    ax4.set_title("moving avg")
+    ax4.set_title("moving avg", fontsize=10)
     ax4.plot(smoothed_vals_avg, markersize=8, alpha=0.4)
     plt.tight_layout()
     plt.savefig(outpath) 
@@ -142,15 +144,16 @@ def plot_signal(signal, smoothed_vals_adaptive, smoothed_vals_avg, outpath: str)
 
 
 
-##########################################
+#################### PLOTTING ####################
 
+title = "roberta-base-MNLI"
 
 # Load specific run of the experiment
 with open(
     os.path.join(
         "configs",
         "infodynamics_configs",  # Important that this is infodynamics_configs
-        "distilbert-base-uncased-MNLI_infodynamics_config.yaml",  # Has to contain a timestamp!
+        f"{title}_infodynamics_config.yaml",  # Has to contain a timestamp!
     ),
     "r",
 ) as file:
@@ -180,53 +183,61 @@ adaptive_filter_span = 56
 
 smoothed_novelty_adaptive = adaptive_filter(novelty, span=adaptive_filter_span)
 smoothed_resonance_adaptive = adaptive_filter(resonance, span=adaptive_filter_span)
-plt.plot(smoothed_novelty_adaptive)
-plt.plot(smoothed_resonance_adaptive)
+#plt.plot(smoothed_novelty_adaptive)
+#plt.plot(smoothed_resonance_adaptive)
 
 smoothed_novelty_avg = move_avg(novelty, n=moving_avg_n)
 smoothed_resonance_avg = move_avg(resonance, n=moving_avg_n)
-plt.plot(smoothed_novelty_avg)
-plt.plot(smoothed_resonance_avg)
+#plt.plot(smoothed_novelty_avg)
+#plt.plot(smoothed_resonance_avg)
 
 
-
-plot_signal(novelty, smoothed_novelty_adaptive, smoothed_novelty_avg, outpath=os.path.join(NTR_folder_path, f"{signal_name}_moving_avg-{moving_avg_n}_adaptive_filter-{adaptive_filter_span}.png"))
-
-adaptiveline(novelty, resonance, outpath=os.path.join(NTR_folder_path, f"{signal_name}_adaptive_filter.png"))
+# 4 x 4 plot
+plot_signal(novelty, smoothed_novelty_adaptive, smoothed_novelty_avg, outpath=os.path.join(NTR_folder_path, f"{signal_name}_moving_avg-{moving_avg_n}_adaptive_filter-{adaptive_filter_span}.png"), title=title)
 
 
-#########
-######### need to change the adaptiveline plot to only incluce the adaptive filter with span 56 (and maybe also the moving average with n=10000, but faded out) and the original signal (most faded)
-#########
-
-
-
-
-# Plot the signal and the smoothed signal in the same plot
+# Novelty and smoothed signals
 fig = plt.figure(figsize=(12,6),dpi=300)
 plt.plot(normalize(novelty, lower=0), alpha=0.1)
 plt.plot(normalize(smoothed_novelty_avg, lower=0), label=f"Moving average (n={moving_avg_n})", alpha=0.5)
 plt.plot(normalize(smoothed_novelty_adaptive, lower=0) , label=f"Adaptive filter (span={adaptive_filter_span})")
 plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
 plt.legend()
+plt.title(title)
 plt.savefig(os.path.join(NTR_folder_path, f"novelty_w_smoothed_signals_adaptive_filter-{adaptive_filter_span}_moving_avg-{moving_avg_n}.png"))
 
 
+# Adaptive filter w steps
 _, ax = plt.subplots(2,1,figsize=(14,6),dpi=300)
-ax[0].plot(normalize(novelty, lower=0),c="gray", alpha = 0.5)
+# add title to the top of the figure
+plt.suptitle(title)
+ax[0].plot(normalize(novelty, lower=0),c="gray", alpha = 0.3)
 #ax[0].plot(normalize(smoothed_novelty_avg, lower=0))
 ax[0].plot(normalize(smoothed_novelty_adaptive, lower=0))
 ax[0].set_ylabel("$\\mathbb{N}ovelty$", fontsize=14)
 
-ax[1].plot(normalize(resonance, lower=-1),c="gray", alpha = 0.5)
+ax[1].plot(normalize(resonance, lower=-1),c="gray", alpha = 0.3)
 #ax[1].plot(normalize(smoothed_resonance_avg, lower=0))
 ax[1].plot(normalize(smoothed_resonance_adaptive, lower=-1))
 ax[1].set_ylabel("$\\mathbb{R}esonance$", fontsize=14)
+
+# add vertical line at each 64th step
+for i in [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]:
+    ax[0].axvline(x=64*i, color="orange", alpha=0.8)
+    ax[1].axvline(x=64*i, color="orange", alpha=0.8)
+    ax[0].text(64*i+500, 0.98, f"Step {i}", color="orange", fontsize=10)
+
 plt.tight_layout()
-plt.savefig(outpath)
-#plt.close()
+plt.savefig(os.path.join(NTR_folder_path, "novelty_resonance_w_smoothed_signals_adaptive_filter_and_steps.png"))
 
 
+#################### PLOTTING ####################
+
+
+
+
+
+#adaptiveline(novelty, resonance, outpath=os.path.join(NTR_folder_path, f"{signal_name}_adaptive_filter.png"))
 
 
 
@@ -264,44 +275,40 @@ plt.savefig(outpath)
 
 
 ############### CHECKING SPAN VALUES FOR ADAPTIVE FILTER
-smoothed_signal_adaptive_128 = adaptive_filter(novelty, span=128)
-smoothed_signal_adaptive_56 = adaptive_filter(novelty, span=56)
-smoothed_signal_adaptive_32 = adaptive_filter(novelty, span=32)
+# smoothed_signal_adaptive_128 = adaptive_filter(novelty, span=128)
+# smoothed_signal_adaptive_56 = adaptive_filter(novelty, span=56)
+# smoothed_signal_adaptive_32 = adaptive_filter(novelty, span=32)
 
 
-fig = plt.figure(figsize=(12,6),dpi=300)
-plt.plot(normalize(novelty), alpha=0.3)
-plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
-plt.plot(normalize(smoothed_signal_adaptive_32) , label=f"Adaptive filter (span=32)")
-plt.plot(normalize(smoothed_signal_adaptive_56), label=f"Adaptive filter (span=56)")
-plt.plot(normalize(smoothed_signal_adaptive_128), label=f"Adaptive filter (span=128)")
-plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
-plt.legend()
+# fig = plt.figure(figsize=(12,6),dpi=300)
+# plt.plot(normalize(novelty), alpha=0.3)
+# plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
+# plt.plot(normalize(smoothed_signal_adaptive_32) , label=f"Adaptive filter (span=32)")
+# plt.plot(normalize(smoothed_signal_adaptive_56), label=f"Adaptive filter (span=56)")
+# plt.plot(normalize(smoothed_signal_adaptive_128), label=f"Adaptive filter (span=128)")
+# plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
+# plt.legend()
 
-fig = plt.figure(figsize=(12,6), dpi=300)
-plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
-plt.plot(normalize(smoothed_signal_adaptive_32) , label=f"Adaptive filter (span=32)")
-plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
-plt.legend()
-plt.savefig(os.path.join(NTR_folder_path, "novelty_adaptive_filter_32.png"))
+# fig = plt.figure(figsize=(12,6), dpi=300)
+# plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
+# plt.plot(normalize(smoothed_signal_adaptive_32) , label=f"Adaptive filter (span=32)")
+# plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
+# plt.legend()
+# plt.savefig(os.path.join(NTR_folder_path, "novelty_adaptive_filter_32.png"))
 
-fig = plt.figure(figsize=(12,6), dpi=300)
-plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
-plt.plot(normalize(smoothed_signal_adaptive_56), label=f"Adaptive filter (span=56)")
-plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
-plt.legend()
-plt.savefig(os.path.join(NTR_folder_path, "novelty_adaptive_filter_56.png"))
+# fig = plt.figure(figsize=(12,6), dpi=300)
+# plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
+# plt.plot(normalize(smoothed_signal_adaptive_56), label=f"Adaptive filter (span=56)")
+# plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
+# plt.legend()
+# plt.savefig(os.path.join(NTR_folder_path, "novelty_adaptive_filter_56.png"))
 
-fig = plt.figure(figsize=(12,6), dpi=300)
-plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
-plt.plot(normalize(smoothed_signal_adaptive_128), label=f"Adaptive filter (span=128)")
-plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
-plt.legend()
-plt.savefig(os.path.join(NTR_folder_path, "novelty_adaptive_filter_128.png"))
-
-
-
-
+# fig = plt.figure(figsize=(12,6), dpi=300)
+# plt.plot(normalize(smoothed_novelty_avg), label=f"Moving average (n={moving_avg_n})")
+# plt.plot(normalize(smoothed_signal_adaptive_128), label=f"Adaptive filter (span=128)")
+# plt.ylabel("$\\mathbb{N}ovelty$ (normalized)")
+# plt.legend()
+# plt.savefig(os.path.join(NTR_folder_path, "novelty_adaptive_filter_128.png"))
 
 
 
