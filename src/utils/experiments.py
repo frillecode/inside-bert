@@ -84,11 +84,7 @@ class Experiment:
 
         # either load the existing run directory
         if os.path.exists(self.current_run_dir):
-            load_dir = input(
-                f"[INFO] Loading previous run of experiment {self.experiment_name} with the provided timestamp {self.experiment_timestamp}. ONLY use this for loading results, not training models (as this will overwrite the old results). Do you want to proceed? (y/n) "
-            )
-            if load_dir.lower() != "y":
-                raise FileNotFoundError(f"[INFO] Stopping the program.")
+                print(f"[INFO] Loading previous run of experiment {self.experiment_name} with the provided timestamp {self.experiment_timestamp}. ONLY use this for loading results, not training models (as this will overwrite the old results).")
         # or ask user if they want to create a new one
         else:
             raise FileNotFoundError(

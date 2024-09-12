@@ -4,7 +4,6 @@ import yaml
 from utils.experiments import Experiment
 from utils.utils_infodynamics import (
     calc_ntr,
-    calculate_resonance_novelty_slope,
     curb_incomplete_signal,
     load_and_reshape_logits_from_dir,
 )
@@ -47,7 +46,7 @@ if __name__ == "__main__":
             "src",
             "configs",
             "infodynamics_configs",  # Important that this is infodynamics_configs
-            "distilbert-base-uncased-MNLI_infodynamics_config.yaml",  # Has to contain a timestamp!
+            "distilbert-base-uncased-MRPC_infodynamics_config.yaml",  # Has to contain a timestamp!
         ),
         "r",
     ) as file:
