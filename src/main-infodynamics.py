@@ -4,7 +4,6 @@ import yaml
 from utils.experiments import Experiment
 from utils.utils_infodynamics import (
     calc_ntr,
-    calculate_resonance_novelty_slope,
     curb_incomplete_signal,
     load_and_reshape_logits_from_dir,
 )

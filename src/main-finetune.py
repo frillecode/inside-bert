@@ -1,5 +1,4 @@
 import os
-
 import torch
 from utils.experiments import Experiment
 from utils.utils_finetune import (
@@ -7,13 +6,7 @@ from utils.utils_finetune import (
     CustomTrainer,
     compute_metrics,
 )
-from transformers import (
-    AutoTokenizer,
-    AutoModelForSequenceClassification,
-    Trainer,
-    TrainerCallback,
-    TrainingArguments,
-)
+from transformers import AutoModelForSequenceClassification
 import yaml
 
 
