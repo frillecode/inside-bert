@@ -47,7 +47,7 @@ if __name__ == "__main__":
             "src",
             "configs",
             "infodynamics_configs",  # Important that this is infodynamics_configs
-            "distilbert-base-uncased-MNLI_infodynamics_config.yaml",  # Has to contain a timestamp!
+            "distilbert-base-uncased-MRPC_infodynamics_config.yaml",  # Has to contain a timestamp!
         ),
         "r",
     ) as file:
